@@ -13,6 +13,15 @@ Before using this script, you must have the following available on the remote ho
 1.  A custom GLIBC toolchain (version \>= 2.28).
 2.  The `patchelf` binary installed and available in your `PATH` or at a known location.
 
+#### ref. to vscode faq: https://code.visualstudio.com/docs/remote/faq#_can-i-run-vs-code-server-on-older-linux-distributions
+1.  Build the sysroot
+2.  VS Code server uses patchelf during the installation process to consume the required libraries from the sysroot
+   * Install the patchelf binary and the sysroot on the remote host (https://github.com/NixOS/patchelf)
+   * Create the following 3 environment variables:
+     - VSCODE_SERVER_CUSTOM_GLIBC_LINKER path to the dynamic linker in the sysroot (used for --set-interpreter option with patchelf)
+     - VSCODE_SERVER_CUSTOM_GLIBC_PATH path to the library locations in the sysroot (used as --set-rpath option with patchelf)
+     - VSCODE_SERVER_PATCHELF_PATH path to the patchelf binary on the remote host
+
 ## How to Use
 
 1.  **Configure the Script:** Open the `auto_patch_vscode.sh` script and edit the three variables in the "Configure your paths here" section to match your environment.
