@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # Automatically patch the VS Code Server to use a custom GLIBC toolchain
+# Version 2.0: Simplified exec path for robustness
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
@@ -27,9 +28,6 @@ if [ ! -d "$VSCODE_DIR" ]; then
 fi
 
 # Find the target executable (filename format is 'code-<commit-hash>')
-# -type f : Ensures it's a file
-# -executable : Ensures it's an executable file
-# ! -name '*.original' : Excludes our own backup files
 TARGET_FILE=$(find "$VSCODE_DIR" -name 'code-*' -type f -executable ! -name '*.original' | head -n 1)
 
 if [ -z "$TARGET_FILE" ]; then
@@ -55,7 +53,6 @@ mv "$TARGET_FILE" "$ORIGINAL_FILE"
 echo "Original file backed up to: $ORIGINAL_FILE"
 
 # 2. Create the new wrapper script (with the same name as the original file)
-#    Using 'cat <<EOF' is a clean way to write a multi-line string to a file.
 cat <<EOF > "$TARGET_FILE"
 #!/bin/bash
 #
@@ -65,8 +62,9 @@ export VSCODE_SERVER_CUSTOM_GLIBC_LINKER="$GLIBC_LINKER"
 export VSCODE_SERVER_CUSTOM_GLIBC_PATH="$GLIBC_PATH"
 export VSCODE_SERVER_PATCHELF_PATH="$PATCHELF_PATH"
 
-# Execute our backed-up original file, passing along all arguments
-exec "$(dirname "\$0")/${ORIGINAL_FILE##*/}" "\$@"
+# Execute our backed-up original file using its full, absolute path.
+# This is simpler and more robust than the previous version.
+exec "$ORIGINAL_FILE" "\$@"
 EOF
 
 # 3. Make the new script executable
