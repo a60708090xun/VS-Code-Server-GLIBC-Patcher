@@ -5,10 +5,17 @@
 set -e # Exit immediately if a command exits with a non-zero status.
 
 # --- Configure your paths here ---
-GLIBC_LINKER="/pool2/chenhsun/toolchain-dir/x86_64-linux-gnu/x86_64-linux-gnu/sysroot/lib/ld-linux-x86-64.so.2"
-GLIBC_PATH="/pool2/chenhsun/toolchain-dir/x86_64-linux-gnu/x86_64-linux-gnu/sysroot/lib"
+# 1. Set the main path to your toolchain's sysroot directory.
+TOOLCHAIN_SYSROOT_DIR="/opt/toolchain-vscode-ssh/x86_64-linux-gnu/x86_64-linux-gnu/sysroot"
+
+# 2. Set the path to the patchelf executable.
 PATCHELF_PATH="/usr/local/bin/patchelf"
 # ---------------------------------
+
+# --- Derived variables (usually no need to change these) ---
+GLIBC_LINKER="${TOOLCHAIN_SYSROOT_DIR}/lib/ld-linux-x86-64.so.2"
+GLIBC_PATH="${TOOLCHAIN_SYSROOT_DIR}/lib"
+# -------------------------------------------------------------
 
 VSCODE_DIR="$HOME/.vscode-server"
 
