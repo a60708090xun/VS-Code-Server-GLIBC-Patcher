@@ -13,13 +13,6 @@ Before using this script, you must have the following available on the remote ho
 1.  A custom GLIBC toolchain (version \>= 2.28).
 2.  The `patchelf` binary installed and available in your `PATH` or at a known location.
 
-# 3. Make the new script executable
-chmod +x "$TARGET_FILE"
-
-echo "Successfully created wrapper script: $TARGET_FILE"
-echo "Patching complete! You can now try to connect from VS Code."
-```
-
 ## How to Use
 
 1.  **Configure the Script:** Open the `auto_patch_vscode.sh` script and edit the three variables in the "Configure your paths here" section to match your environment.
